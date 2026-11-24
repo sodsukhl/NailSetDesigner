@@ -1,0 +1,245 @@
+/* =============================================================
+   style.css — colours (coral brand from the logo) and fonts from the Style Tile
+   ============================================================= */
+:root {
+  --pink: #ee6e6e;        /* brand coral (from the logo) */
+  --mint: #d5f3d8;        /* style tile mint (hover) */
+  --lavender: #c1bfff;    /* style tile lavender (selected) */
+  --rose: #c24848;        /* deeper coral for links / active nav (readable on white) */
+  --text: #2b2a28;
+  --muted: #6f6d68;
+  --line: #f6c0bb;        /* soft coral divider lines */
+  --dark: #333;           /* Save button */
+  --on-dark: #fff;        /* text on the Save button */
+  --on-accent: #2b2a28;   /* text on lavender / mint */
+  --surface: #fff;        /* cards, pills, pop-up */
+  --nav-bg: #fff;
+  --nav-border: #e9dede;
+  --border: #555;         /* pill outlines */
+  --swatch-border: #bbb;
+  --ring: #444;           /* ring around the chosen swatch */
+  --artboard: #fff;       /* behind the hand pictures */
+  --preview-bg: #fff7f7;  /* behind Saved Designs previews */
+  --shadow: 0 1px 3px rgba(0,0,0,0.12);
+  --backdrop: rgba(238, 110, 110, 0.35);
+  /* White at the top, fading into the logo coral at the bottom */
+  --page-bg: #f2958e linear-gradient(180deg, #fff 0, #fde4e1 120px, #f9c3bd 450px, #f2958e 1000px) no-repeat;
+  color-scheme: light;
+}
+
+/* ===== Dark mode (switch in the nav bar) ===== */
+:root[data-theme="dark"] {
+  --mint: #3c5442;
+  --rose: #f59a94;
+  --text: #f4eeee;
+  --muted: #bcb0b3;
+  --line: #6a3c3c;
+  --dark: #ee6e6e;        /* Save button turns coral... */
+  --on-dark: #2b2a28;     /* ...with dark text */
+  --on-accent: #1f1b3d;
+  --surface: #2b2527;
+  --nav-bg: #211c1e;
+  --nav-border: #3d3336;
+  --border: #9c9093;
+  --swatch-border: #6d6265;
+  --ring: #f4eeee;
+  --artboard: #ece5e6;    /* hands stay on a soft light "artboard" so their outlines show */
+  --preview-bg: #ece5e6;
+  --shadow: 0 1px 3px rgba(0,0,0,0.5);
+  --backdrop: rgba(10, 6, 8, 0.6);
+  --page-bg: #3a2224 linear-gradient(180deg, #1c1719 0, #241a1c 450px, #3a2224 1000px) no-repeat;
+  color-scheme: dark;
+}
+/* The hand canvas keeps light colours in dark mode, so its buttons read on the artboard */
+:root[data-theme="dark"] .canvas {
+  --text: #2b2a28; --muted: #6f6d68; --surface: #fff; --border: #555;
+  --swatch-border: #bbb; --ring: #444; --mint: #d5f3d8; --on-accent: #2b2a28;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Figtree", system-ui, sans-serif;
+  color: var(--text);
+  min-height: 100vh;
+  background: var(--page-bg);
+}
+button { font: inherit; cursor: pointer; }
+/* Clear focus ring for keyboard users, in both themes */
+:focus-visible { outline: 3px solid var(--lavender); outline-offset: 2px; }
+
+/* ---------- Nav bar ---------- */
+.nav {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 32px; background: var(--nav-bg); border-bottom: 1px solid var(--nav-border);
+}
+.brand { display: flex; align-items: center; }
+.brand-logo { height: 46px; width: auto; display: block; }
+/* Two logo files: the dark one has light outlines */
+.logo-dark { display: none; }
+:root[data-theme="dark"] .logo-light { display: none; }
+:root[data-theme="dark"] .logo-dark { display: block; }
+.nav-links { display: flex; align-items: center; gap: 48px; }
+.nav-links a { color: var(--text); text-decoration: none; font-size: 18px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+.nav-links a.active { color: var(--rose); text-decoration: underline; text-underline-offset: 4px; }
+
+/* Dark mode switch */
+.theme-toggle {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: none; border: none; padding: 0; color: var(--text); font-size: 15px;
+}
+.theme-track {
+  position: relative; width: 50px; height: 28px; border-radius: 999px;
+  border: 1px solid var(--border); background: var(--surface);
+}
+.theme-knob {
+  position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%;
+  background: var(--lavender); color: var(--on-accent);
+  display: grid; place-items: center; transition: transform 0.2s ease;
+}
+.theme-toggle[aria-checked="true"] .theme-knob { transform: translateX(22px); }
+.theme-knob svg { width: 13px; height: 13px; }
+.theme-knob .moon, .theme-toggle[aria-checked="true"] .theme-knob .sun { display: none; }
+.theme-toggle[aria-checked="true"] .theme-knob .moon { display: block; }
+@media (prefers-reduced-motion: reduce) { .theme-knob { transition: none; } }
+
+/* ---------- Page layout ---------- */
+main { max-width: 1440px; margin: 0 auto; padding: 28px 34px 40px; }
+.page-head { margin-bottom: 16px; }
+.page-sub { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
+h1 { margin: 0; font-size: 30px; font-weight: 600; }
+.title-edit { display: flex; align-items: center; gap: 6px; }
+.title-input {
+  font: inherit; font-size: 30px; font-weight: 600; color: var(--text);
+  border: none; background: transparent; padding: 0; width: auto; min-width: 4ch;
+  border-bottom: 2px dashed transparent; outline: none;
+  field-sizing: content; /* grows to fit the name */
+}
+.title-input:hover, .title-input:focus { border-bottom-color: var(--rose); }
+.edit-icon { width: 22px; height: 22px; color: var(--text); }
+
+.card {
+  background: var(--surface); border-radius: 6px;
+  box-shadow: var(--shadow);
+}
+.canvas.card { background: var(--artboard); color: var(--text); } /* uses the canvas's own (light) text colour */
+
+/* ---------- Studio ---------- */
+.studio { display: grid; grid-template-columns: 1fr 530px; gap: 30px; }
+.canvas { position: relative; min-height: 770px; overflow: hidden; display: flex; justify-content: center; }
+/* The hand fills the card between the switch (top) and Reset / Skin Tone (bottom) */
+.canvas svg { position: absolute; top: 70px; left: 24px; width: calc(100% - 48px); height: calc(100% - 180px); }
+
+/* One hand / Both hands switch (top right of the canvas) */
+.view-toggle {
+  position: absolute; top: 20px; right: 24px; z-index: 1;
+  display: flex; padding: 3px; gap: 3px;
+  border: 1px solid var(--border); border-radius: 999px; background: var(--surface);
+}
+.view-toggle button {
+  height: 28px; padding: 0 16px; border: none; border-radius: 999px;
+  background: transparent; font-size: 13px; color: var(--text);
+}
+.view-toggle button:hover { background: var(--mint); }
+.view-toggle button[aria-pressed="true"] { background: var(--lavender); color: var(--on-accent); }
+.skin-tones { position: absolute; right: 32px; bottom: 28px; }
+.reset-btn { position: absolute; left: 32px; bottom: 34px; } /* lines up with the middle of the skin tone circles */
+.skin-tones p { margin: 0 0 10px; font-weight: 500; font-size: 15px; }
+
+.panel { padding: 24px 22px 22px; display: flex; flex-direction: column; }
+.panel h2 { margin: 0 0 22px; font-size: 22px; font-weight: 500; }
+.section { padding-bottom: 22px; margin-bottom: 22px; border-bottom: 1px solid var(--line); }
+.section h3 { margin: 0 0 12px; font-size: 15px; font-weight: 500; }
+.pills { display: flex; flex-wrap: wrap; gap: 10px; }
+/* Every pill button shares the same size and padding */
+.pill {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  height: 30px; padding: 0 16px; min-width: 64px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 999px;
+  font-size: 13px; line-height: 1; color: var(--text);
+}
+.pill:hover { background: var(--mint); }
+.pill[aria-pressed="true"], .pill.tag { background: var(--lavender); border-color: #6e67e0; color: var(--on-accent); }
+.pill.tag { cursor: default; }
+
+.swatches { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+.swatch {
+  width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--swatch-border);
+  display: grid; place-items: center; padding: 0;
+}
+.swatch[aria-pressed="true"] { outline: 3px solid var(--ring); outline-offset: -3px; }
+.swatch[aria-pressed="true"]::after { content: "✓"; font-size: 14px; color: #333; }
+.swatch.dark[aria-pressed="true"]::after { color: #fff; }
+.picker-pill { display: inline-flex; align-items: center; gap: 6px; position: relative; overflow: hidden; }
+.picker-pill input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+
+.your-set {
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  padding-bottom: 22px; margin-bottom: 22px; border-bottom: 1px solid var(--line);
+}
+.your-set h3 { margin: 0; font-size: 15px; font-weight: 500; }
+.panel-foot { margin-top: auto; text-align: center; }
+.save-btn {
+  width: 100%; height: 48px;
+  background: var(--dark); color: var(--on-dark); border: none; border-radius: 999px;
+  font-size: 22px; font-weight: 600;
+}
+.save-btn:hover { filter: brightness(0.85); }
+.status { font-size: 13px; color: var(--muted); min-height: 1.2em; margin: 8px 0 0; }
+
+/* ---------- Pop-up (Reset / Delete) ---------- */
+.popup {
+  width: min(420px, calc(100vw - 32px)); padding: 28px 28px 24px;
+  border: none; border-radius: 16px; background: var(--surface); color: var(--text);
+  box-shadow: 0 12px 40px rgba(120, 40, 60, 0.25);
+  text-align: center;
+}
+.popup::backdrop { background: var(--backdrop); backdrop-filter: blur(3px); }
+.popup[open] { animation: popup-in 0.18s ease-out; }
+@keyframes popup-in { from { opacity: 0; transform: translateY(8px) scale(0.97); } }
+.popup-title { margin: 0 0 10px; font-size: 22px; font-weight: 600; }
+.popup-message { margin: 0 0 24px; font-size: 15px; line-height: 1.5; color: var(--muted); }
+.popup-actions { display: flex; gap: 12px; }
+.popup-actions button { flex: 1; height: 44px; font-size: 16px; }
+.popup-confirm {
+  background: var(--dark); color: var(--on-dark); border: none; border-radius: 999px; font-weight: 600;
+}
+.popup-confirm:hover { filter: brightness(0.85); }
+.popup-confirm.danger { background: #c24848; color: #fff; }
+.popup-confirm.danger:hover { background: #a83b3b; }
+.popup button:focus-visible { outline: 3px solid var(--lavender); outline-offset: 2px; }
+
+/* ---------- Saved designs ---------- */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 24px; }
+.design-card { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+.design-card svg { width: 100%; height: 210px; background: var(--preview-bg); border-radius: 4px; }
+.design-card h3 { margin: 4px 0 0; font-size: 18px; font-weight: 600; }
+.design-card .meta { margin: 0; font-size: 13px; color: var(--muted); }
+.design-card .actions { display: flex; gap: 8px; margin-top: 6px; }
+.design-card .actions a { flex: 1; }
+.design-card .open { width: 100%; height: 30px; background: var(--dark); color: var(--on-dark); border: none; border-radius: 999px; font-size: 13px; }
+.empty { padding: 40px; text-align: center; }
+.empty a { color: var(--rose); }
+
+/* ---------- Phones and small screens ---------- */
+@media (max-width: 1000px) {
+  .studio { grid-template-columns: 1fr; }
+  .canvas { min-height: 0; flex-direction: column; align-items: center; }
+  .view-toggle { position: static; align-self: flex-end; margin: 16px 16px 0; }
+  .canvas svg { position: static; width: 100%; height: auto; max-height: 520px; padding: 0 12px; }
+  .skin-tones { position: static; padding: 8px 16px 12px; text-align: center; }
+  .reset-btn { position: static; order: 3; margin-bottom: 20px; } /* sits under the skin tones */
+  .nav { padding: 12px 16px; }
+  .brand-logo { height: 36px; }
+  .nav-links { gap: 18px; }
+  .nav-links a { font-size: 15px; }
+  main { padding: 20px 16px; }
+}
+@media (max-width: 600px) {
+  .brand-logo { height: 28px; }
+  .nav-links a { font-size: 14px; }
+  .theme-label { display: none; }   /* just the switch on phones */
+  /* Logo on top, links and switch on a row underneath */
+  .nav { flex-wrap: wrap; row-gap: 10px; }
+  .nav-links { width: 100%; justify-content: space-between; gap: 14px; }
+  .nav-links a { white-space: nowrap; }
+}
